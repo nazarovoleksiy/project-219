@@ -5,3 +5,8 @@ div {
 textarea {
   resize: none;
 }
+
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border: 2px solid red;
+}
