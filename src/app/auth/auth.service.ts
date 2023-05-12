@@ -3,12 +3,13 @@ import {HttpClient} from "@angular/common/http";
 import {catchError} from "rxjs/operators";
 import {throwError} from "rxjs";
 
-interface AuthResponseData {
-  idToken:	string;
-  email:	string;
-  refreshToken:	string;
-  expiresIn:	string;
+export interface AuthResponseData {
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
   localId: string;
+  registered?: boolean;
 }
 
 @Injectable({providedIn: 'root'})
@@ -30,7 +31,7 @@ export class AuthService {
     ).pipe(
       catchError(errorRes => {
         let errorMessage = 'An unknown error occured';
-        if(!errorRes.error || !errorRes.error.error) {
+        if (!errorRes.error || !errorRes.error.error) {
           return throwError(errorMessage);
         }
         switch (errorRes.error.error.message) {
@@ -41,4 +42,16 @@ export class AuthService {
       })
     );
   }
+
+  login(email: string, password: string) {
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAVjCRwJDdZALEDszLa0RJ2FTuAqT-J5DM',
+      {
+        email: email,
+        password: password,
+        returnSecureToken: true,
+      }
+    )
+  }
+
+
 }
