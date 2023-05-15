@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
-import { throwError, Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {catchError, tap} from 'rxjs/operators';
+import {throwError, BehaviorSubject} from 'rxjs';
 
-import { User } from './user.model';
+import {User} from './user.model';
 
 export interface AuthResponseData {
   kind: string;
@@ -15,16 +15,18 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthService {
-  user = new Subject<User>();
+  user = new BehaviorSubject<User>(null);
+  token: string = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   signup(email: string, password: string) {
     return this.http
       .post<AuthResponseData>(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyDb0xTaRAoxyCgvaDF3kk5VYOsTwB_3o7Y',
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAVjCRwJDdZALEDszLa0RJ2FTuAqT-J5DM',
         {
           email: email,
           password: password,
@@ -47,7 +49,7 @@ export class AuthService {
   login(email: string, password: string) {
     return this.http
       .post<AuthResponseData>(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDb0xTaRAoxyCgvaDF3kk5VYOsTwB_3o7Y',
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAVjCRwJDdZALEDszLa0RJ2FTuAqT-J5DM',
         {
           email: email,
           password: password,
